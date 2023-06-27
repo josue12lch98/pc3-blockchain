@@ -1,0 +1,27 @@
+{
+  "name": "MOCHE#30",
+  "description": "NFT MOCHE collection by Pachacuy.io inspired by the fertility huacos of the Peruvian Moche culture",
+  "image": "ipfs://QmRajTZXNF4DMknTkenKZFURKEvhCbEwVASWJkfTp7Svrp/0.png",
+  "attributes": [
+    {
+      "trait_type": "MANTO",
+      "value": "MANTO COSTA"
+    },
+    {
+      "trait_type": "BANCO",
+      "value": "TRONCO"
+    },
+    {
+      "trait_type": "CUY",
+      "value": "CUY HUACO"
+    },
+    {
+      "trait_type": "CHULLO",
+      "value": "CHULLO TURISTA"
+    },
+    {
+      "trait_type": "CARA",
+      "value": "OJOS BASE"
+    }
+  ]
+}
