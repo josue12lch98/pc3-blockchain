@@ -18,9 +18,48 @@ describe("MI PRIMER TOKEN TESTING", function () {
   var name = "Mi Primer NFT";
   var symbol = "MPRNFT";
 
-  before(async () => {
+  beforeEach(async function () {
+ 
     [owner, gnosis, alice, bob, carl, deysi] = await ethers.getSigners();
-  });
+      // Mock miPrimerToken contract
+      const MyTokenMiPrimerToken = await ethers.getContractFactory("MyTokenMiPrimerToken");
+  
+      miPrimerToken = await hre.upgrades.deployProxy(MyTokenMiPrimerToken, {
+      kind: "uups",
+    });
+    
+     implementationAddress = await upgrades.erc1967.
+    getImplementationAddress(miPrimerToken.address);
+  
+      const NFT = await ethers.getContractFactory("NFT");
+  
+      miPrimerNft = await upgrades.deployProxy(NFT, ["MyNFT", "MNFT"], {
+        initializer: "initialize",
+        kind: "uups",
+      });
+    
+     implementationAddress = await upgrades.erc1967.
+    getImplementationAddress(nft.address);
+  
+      
+  
+      // Initialize DarkRallySale contract
+      const PublicSale = await ethers.getContractFactory("PublicSale");
+    
+    
+   
+      publicSale = await upgrades.deployProxy(PublicSale,  {
+        kind: "uups",
+      });
+      
+       implementationAddressDarkRallySale = await upgrades.erc1967.
+      getImplementationAddress(publicSale.address);
+  
+      const USDCoin = await ethers.getContractFactory("USDCoin");
+      usdCoin = await USDCoin.deploy();
+   
+    
+    });
 
   // Estos dos métodos a continuación publican los contratos en cada red
   // Se usan en distintos tests de manera independiente
@@ -31,9 +70,87 @@ describe("MI PRIMER TOKEN TESTING", function () {
 
   describe("Mi Primer Nft Smart Contract", () => {
     // Se publica el contrato antes de cada test
-    beforeEach(async () => {
-      await deployNftSC();
+  
+    
+    describe("MiPrimerNft", function () {
+      let owner, gnosis, alice, bob, carl, deysi;
+      let MiPrimerNft;
+      let miPrimerNft;
+    
+      beforeEach(async function () {
+        [owner, gnosis, alice, bob, carl, deysi] = await ethers.getSigners();
+    
+        MiPrimerNft = await ethers.getContractFactory("MiPrimerNft");
+        miPrimerNft = await upgrades.deployProxy(NFT, ["MyNFT", "MNFT"], {
+          initializer: "initialize",
+          kind: "uups",
+        });
+           });
+    
+      it.only("should deploy the contract", async function () {
+        expect(await miPrimerNft.name()).to.equal("MiPrimerNft");
+      });
+    
+      it.only("should mint NFTs", async function () {
+        await miPrimerNft.safeMint(alice.address, 1);
+        expect(await miPrimerNft.ownerOf(1)).to.equal(alice.address);
+    
+        await miPrimerNft.safeMint(bob.address, 30);
+        expect(await miPrimerNft.ownerOf(30)).to.equal(bob.address);
+    
+        await expect(miPrimerNft.safeMint(carl.address, 0)).to.be.revertedWith(
+          "Public Sale: id must be between 1 and 30"
+        );
+    
+        await expect(miPrimerNft.safeMint(deysi.address, 31)).to.be.revertedWith(
+          "Public Sale: id must be between 1 and 30"
+        );
+      });
     });
+    
+    describe("MiPrimerNft2", function () {
+      let owner, gnosis, alice, bob, carl, deysi;
+      let MiPrimerNft2;
+      let miPrimerNft2;
+    
+      beforeEach(async function () {
+        [owner, gnosis, alice, bob, carl, deysi] = await ethers.getSigners();
+    
+        MiPrimerNft2 = await ethers.getContractFactory("MiPrimerNft2");
+        miPrimerNft2 = await upgrades.deployProxy(MiPrimerNft2);
+      });
+    
+      it.only("should deploy the contract", async function () {
+        expect(await miPrimerNft2.name()).to.equal("MiPrimerNft");
+      });
+    
+      it.only("should mint NFTs", async function () {
+        await miPrimerNft2.safeMint(alice.address, 1);
+        expect(await miPrimerNft2.ownerOf(1)).to.equal(alice.address);
+    
+        await miPrimerNft2.safeMint(bob.address, 30);
+        expect(await miPrimerNft2.ownerOf(30)).to.equal(bob.address);
+    
+        await expect(miPrimerNft2.safeMint(carl.address, 0)).to.be.revertedWith(
+          "Public Sale: id must be between 1 and 30"
+        );
+    
+        await expect(miPrimerNft2.safeMint(deysi.address, 31)).to.be.revertedWith(
+          "Public Sale: id must be between 1 and 30"
+        );
+      });
+    
+      it.only("should pause and unpause the contract", async function () {
+        expect(await miPrimerNft2.paused()).to.equal(false);
+    
+        await miPrimerNft2.pause();
+        expect(await miPrimerNft2.paused()).to.equal(true);
+    
+        await miPrimerNft2.unpause();
+        expect(await miPrimerNft2.paused()).to.equal(false);
+      });
+    });
+    
 
     it("Verifica nombre colección", async () => {});
 

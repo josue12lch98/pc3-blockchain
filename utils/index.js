@@ -61,9 +61,8 @@ async function deploySCNoUp(contractName, args = []) {
   if (process.env.HARDHAT_NETWORK) {
     var tx = await smartContract.deployed();
     await tx.deployTransaction.wait(5);
-
-    console.log(`${contractName} - Imp: ${smartContract.address}`);
   }
+  console.log(`${contractName} - Imp: ${smartContract.address}`);
   return smartContract;
 }
 

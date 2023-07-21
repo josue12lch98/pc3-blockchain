@@ -54,7 +54,7 @@ async function upgrade() {
 }
 
 /main()/
-upgrade()
+main()
   
   .catch((error) => {
     console.error(error);

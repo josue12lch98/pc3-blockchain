@@ -1,10 +1,22 @@
 require("dotenv").config();
 require("@nomicfoundation/hardhat-toolbox");
 require("@openzeppelin/hardhat-upgrades");
+require('solidity-coverage');
+
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.18",
+  plugins: ['hardhat-hardhat-coverage'],
+  solidity: {
+    version: "0.8.18",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    },
+  }, 
   networks: {
     mumbai: {
       url: process.env.MUMBAI_TESNET_URL,
@@ -31,7 +43,7 @@ module.exports = {
   etherscan: {
     apiKey: {
       goerli: process.env.API_KEY_ETHERSCAN,
-      mumbai: process.env.API_KEY_POLYGONSCAN,
+      polygonMumbai: process.env.API_KEY_POLYGONSCAN,
       sepolia :  process.env.API_KEY_ETHERSCAN,
     },
   },

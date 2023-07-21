@@ -46,13 +46,13 @@ UUPSUpgradeable{
    function _baseURI() internal pure override returns (string memory) {
         return "ipfs://QmNUn3p5niXFjHSMsBLKuQxGH6TQsMnPoo5DaK6P1E7L6X/";
     }
-
+ 
     function safeMint(address to, uint256 id) public onlyRole(MINTER_ROLE) {
         // Se hacen dos validaciones
         // 1 - Dicho id no haya sido acuñado antes
         // 2 - Id se encuentre en el rando inclusivo de 1 a 30
         //      * Mensaje de error: "Public Sale: id must be between 1 and 30"
-        require(_exists(id), "Ya tiene duenio");
+        require(!_exists(id), "Ya tiene duenio");
         require(id <= 30 && id >= 1,"Public Sale: id must be between 1 and 30"); // El id inicia en 0 hasta 29. si coloco de 1 a 30, tendria que restar 1 posteriormente.
 
         _safeMint(to, id);      
@@ -136,11 +136,14 @@ UUPSUpgradeable{
 
     // The following functions are overrides required by Solidity.
 
-    function supportsInterface(
-        bytes4 interfaceId
-     ) public view override(ERC721Upgradeable, AccessControlUpgradeable) returns (bool) {
-         return super.supportsInterface(interfaceId);
-     }
+   
+        function supportsInterface(
+            bytes4 interfaceId
+        ) public view virtual override(ERC721Upgradeable, AccessControlUpgradeable) returns (bool) {
+            return super.supportsInterface(interfaceId);
+        }
+   
+     
 
 
 
